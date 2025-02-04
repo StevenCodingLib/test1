@@ -14,11 +14,9 @@
         {{range .}}
         <div class="card" data-id="{{.ID}}" onclick="goToPage(this)">
             <div class="card-inner">
-                <!-- Front of the card -->
                 <div class="card-front">
                     <img src="{{.Image}}" alt="{{.Name}} Image">
                 </div>
-                <!-- Back of the card -->
                 <div class="card-back">
                     <h2>{{.Name}}</h2>
                 </div>
@@ -27,7 +25,6 @@
         {{end}}
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <p>&copy; <span id="year"></span> Created by Ttarara && Sntentop && Xkissas 🔥💙🎶</p>
     </footer>

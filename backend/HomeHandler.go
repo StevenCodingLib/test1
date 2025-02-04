@@ -15,22 +15,9 @@ func HandleHome(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "templates/405.html")
 		return
 	}
-	apiArtist := "https://groupietrackers.herokuapp.com/api/artists"
 
-	artists, err := fetchArtists(apiArtist)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		http.ServeFile(w, r, "templates/500.html")
-		return
-	}
-
-	tmpl, err := template.ParseFiles("templates/index.html")
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		http.ServeFile(w, r, "templates/500.html")
-		return
-	}
-	tmpl.Execute(w, artists)
+	// Απλά επιστρέφει το home.html χωρίς να φορτώνει δεδομένα
+	http.ServeFile(w, r, "templates/home.html")
 }
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request) {

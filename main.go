@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -33,37 +34,52 @@ func logHistory(message string) {
 }
 
 func main() {
-	if len(os.Args) != 1 {
-		fmt.Fprintln(os.Stderr, "check args!!!")
-		return
-	}
-
-	fmt.Println("This is your port: http://localhost:8080/")
+	fmt.Println("Server running at: http://localhost:8080/")
 
 	startTime := time.Now()
 	logHistory(fmt.Sprintf("Server started at %s", startTime.Format(time.RFC1123)))
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		logHistory(fmt.Sprintf("Accessed Home Page - %s", r.RemoteAddr))
-		backend.HandleHome(w, r)
-	})
-	http.HandleFunc("/Artist/", func(w http.ResponseWriter, r *http.Request) {
-		logHistory(fmt.Sprintf("Accessed Artist Page - %s", r.RemoteAddr))
-		backend.HandlePage(w, r)
-	})
-	http.HandleFunc("/404", func(w http.ResponseWriter, r *http.Request) {
-		logHistory(fmt.Sprintf("404 Error Page Accessed - %s", r.RemoteAddr))
-		backend.ErrorHandler(w, r)
-	})
-	http.HandleFunc("/frontend/css/", func(w http.ResponseWriter, r *http.Request) {
-		logHistory(fmt.Sprintf("Accessed CSS Asset - %s", r.RemoteAddr))
-		backend.CssHandler(w, r)
-	})
-	http.HandleFunc("/frontend/images/", func(w http.ResponseWriter, r *http.Request) {
-		logHistory(fmt.Sprintf("Accessed Image Asset - %s", r.RemoteAddr))
-		backend.ImageHandler(w, r)
+	// Serve home.html at "/"
+	http.HandleFunc("/", backend.HandleHome)
+
+	// Serve index.html at "/index" and load artist data
+	http.HandleFunc("/index", func(w http.ResponseWriter, r *http.Request) {
+		logHistory(fmt.Sprintf("Accessed Index Page - %s", r.RemoteAddr))
+
+		apiArtist := "https://groupietrackers.herokuapp.com/api/artists"
+		artists, err := backend.FetchArtists(apiArtist)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			http.ServeFile(w, r, "templates/500.html")
+			return
+		}
+
+		tmpl, err := template.ParseFiles("templates/index.html")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			http.ServeFile(w, r, "templates/500.html")
+			return
+		}
+
+		tmpl.Execute(w, artists) // Στέλνουμε τα δεδομένα στη σελίδα
 	})
 
+	// Serve about.html at "/about"
+	http.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
+		logHistory(fmt.Sprintf("Accessed About Page - %s", r.RemoteAddr))
+		http.ServeFile(w, r, "templates/about.html")
+	})
+
+	// Serve artist pages
+	http.HandleFunc("/Artist/", backend.HandlePage)
+
+	// Serve error pages
+	http.HandleFunc("/404", backend.ErrorHandler)
+
+	// Serve static assets (CSS, images)
+	http.Handle("/frontend/", http.StripPrefix("/frontend/", http.FileServer(http.Dir("frontend"))))
+
+	// Start server
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		logHistory(fmt.Sprintf("Server stopped due to error: %s", err))

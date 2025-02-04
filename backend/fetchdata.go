@@ -24,35 +24,21 @@ func fetchArtist(apiURL string) (Artist, error) {
 }
 
 // Concurrently fetch multiple artists
-func fetchArtists(apiURL string) (Artists, error) {
-	artistsChan := make(chan Artists)
-	errorChan := make(chan error)
-
-	go func() {
-		resp, err := http.Get(apiURL)
-		if err != nil {
-			errorChan <- err
-			return
-		}
-		defer resp.Body.Close()
-
-		var artists Artists
-		err = json.NewDecoder(resp.Body).Decode(&artists)
-		if err != nil {
-			errorChan <- err
-			return
-		}
-		artistsChan <- artists
-	}()
-
-	select {
-	case artists := <-artistsChan:
-		return artists, nil
-	case err := <-errorChan:
-		return nil, err
-	case <-time.After(5 * time.Second): // Timeout
-		return nil, fmt.Errorf("API request timed out")
+func FetchArtists(apiURL string) (Artists, error) {
+	var artists Artists
+	client := http.Client{Timeout: 5 * time.Second} // Προσθήκη timeout για ασφάλεια
+	resp, err := client.Get(apiURL)
+	if err != nil {
+		return artists, err
 	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&artists)
+	if err != nil {
+		return artists, fmt.Errorf("Error decoding API response: %v", err)
+	}
+
+	return artists, nil
 }
 
 // Concurrently fetch relations, locations, and concert dates
