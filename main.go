@@ -34,6 +34,11 @@ func logHistory(message string) {
 }
 
 func main() {
+	if len(os.Args) != 1 {
+		fmt.Fprintln(os.Stderr, "check args!!!")
+		return
+	}
+
 	fmt.Println("Server running at: http://localhost:8080/")
 
 	startTime := time.Now()

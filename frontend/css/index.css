@@ -21,6 +21,28 @@ h1 {
     letter-spacing: 2px;
 }
 
+.ok {
+    font-family: 'Arial', sans-serif;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #ff007f, #8000ff);
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+    
+}
+
+/* Hover effect */
+.ok:hover {
+    background: linear-gradient(90deg, #8000ff, #ff007f);
+}
+
+
 /* Bands Container */
 .bands {
     display: flex;
