@@ -7,7 +7,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 90vh;
 }
 
 /* Card Container */
@@ -142,7 +142,7 @@ button:nth-child(4):hover { background: #ff007f; }
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 90vh;
     background: rgba(0, 0, 0, 0.5);
 }
 
@@ -185,7 +185,7 @@ button:nth-child(4):hover { background: #ff007f; }
     text-decoration: none;
     font-weight: bold;
     transition: 0.3s;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .footer a:hover {

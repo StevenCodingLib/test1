@@ -66,7 +66,7 @@ func main() {
 			return
 		}
 
-		tmpl.Execute(w, artists) // Στέλνουμε τα δεδομένα στη σελίδα
+		tmpl.Execute(w, artists) // Send data to the page
 	})
 
 	// Serve about.html at "/about"
