@@ -30,13 +30,11 @@ The server will start on http://localhost:8080/.
 
 ## Usage
 
-1. Open a web browser and go to http://localhost:8080/ 
+1. Browse through different artists, their concert dates, and locations.
 
-2. Browse through different artists, their concert dates, and locations.
+2. Click on specific elements (e.g., artist cards) to trigger actions like displaying detailed information.
 
-3. Click on specific elements (e.g., artist cards) to trigger actions like displaying detailed information.
-
-4. Experience the event-driven system by interacting with UI elements.
+3. Experience the event-driven system by interacting with UI elements.
 
 
 ### **Deployment**:
